@@ -12,6 +12,6 @@ public class SimpleController {
     @CrossOrigin
     @GetMapping("/sprint2")
     public String homePage() {
-        return "home";
+        return "Fereshta";
     }
 }

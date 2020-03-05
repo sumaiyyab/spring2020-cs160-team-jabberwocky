@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.jabberwocky.getTogether.GetTogetherApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.984 s - in com.jabberwocky.getTogether.GetTogetherApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.224 s - in com.jabberwocky.getTogether.GetTogetherApplicationTests

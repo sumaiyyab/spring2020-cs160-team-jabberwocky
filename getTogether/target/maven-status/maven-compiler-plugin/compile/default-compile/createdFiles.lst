@@ -1,3 +1,5 @@
+com/jabberwocky/getTogether/UserRepo.class
+com/jabberwocky/getTogether/UserController.class
 com/jabberwocky/getTogether/SimpleController.class
 com/jabberwocky/getTogether/GetTogetherApplication.class
-com/jabberwocky/getTogether/SimpleRepo.class
+com/jabberwocky/getTogether/User.class
