@@ -1,7 +1,7 @@
 package com.jabberwocky.getTogether;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface UserRepo extends CrudRepository<User, Integer> {
+public interface UserRepo extends MongoRepository<User, String> {
 
 }

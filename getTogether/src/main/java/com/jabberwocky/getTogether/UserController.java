@@ -1,7 +1,5 @@
 package com.jabberwocky.getTogether;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,9 +21,7 @@ public class UserController {
 
 	@PostMapping("/users/new")
 	 public @ResponseBody String addNewUser (@RequestParam String name, @RequestParam String email) {
-		User n = new User();
-	    n.setName(name);
-	    n.setEmail(email);
+		User n = new User(name, email);
 	    repo.save(n);
 	    return "Saved";
 	}
