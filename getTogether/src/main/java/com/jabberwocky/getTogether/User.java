@@ -11,21 +11,23 @@ import lombok.Setter;
 @Setter
 public class User {
 	@Id
-	private Integer id;
+	private String id;
 
 	private String fullName;
 	private String email;
-	private ArrayList<String> interests;
+	//private ArrayList<String> interests;
 	private ArrayList<User> contacts;
-	private ArrayList<Business> subbedBusinesses;
+	//private ArrayList<Business> subbedBusinesses;
 	private ArrayList<Event> events;
 	
-	public User(String fullName, String email) {
+	public User(String fullName, String email/*, String pw*/) {
 		this.fullName = fullName;
 		this.email = email;
-		interests = new ArrayList<>();
+		//interests = new ArrayList<>();
 		contacts = new ArrayList<>();
-		subbedBusinesses = new ArrayList<>();
+		//subbedBusinesses = new ArrayList<>();
+		/*create random number hash, store hash + hashed pw*/
 		events = new ArrayList<>();
 	}
+
 }
