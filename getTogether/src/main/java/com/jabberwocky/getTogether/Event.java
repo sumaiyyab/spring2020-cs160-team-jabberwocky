@@ -14,10 +14,11 @@ import lombok.Setter;
 public class Event {
 	
 	@Id
-	private UUID eventID;
+	private String eventID;
 	private User host;
 	private String title;
 	private LocalDateTime startTime;
+	private LocalDateTime endTime;
 	private int duration;
 	private String location;
 	private ArrayList<String> tags;
@@ -31,5 +32,13 @@ public class Event {
 		this.location = location;
 		this.tags = tags;
 		this.rsvp = new ArrayList<>();
+	}
+	
+	public ArrayList<User> getRSVP(){
+		return rsvp;
+	}
+	
+	public void addAttendee(User user) {
+		rsvp.add(user);
 	}
 }
