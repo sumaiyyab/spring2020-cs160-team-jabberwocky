@@ -1,5 +1,6 @@
 package com.jabberwocky.getTogether;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import org.springframework.data.annotation.Id;
@@ -29,5 +30,14 @@ public class User {
 		/*create random number hash, store hash + hashed pw*/
 		events = new ArrayList<>();
 	}
-
+	
+	public boolean isFreeAt(LocalDateTime startTime, int duration) {
+		LocalDateTime endTime = startTime.plusMinutes(duration);
+		for (Event e:events) {
+			if (e.hasOverlapWith(startTime, endTime)) {
+				return false;
+			}
+		}
+		return true;
+	}
 }
