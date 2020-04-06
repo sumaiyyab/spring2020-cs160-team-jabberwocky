@@ -5,9 +5,47 @@
 }
 
 .left-column{
+  text-align: center;
   display: flex;
   flex-direction: column;
   width: 10%;
+  background-color: #7529bd;
+  color: rgb(255, 255, 255)
+}
+.btn1{
+  background-color: #7529bd;
+  color: rgb(255, 255, 255);
+  margin: 4px 4px;
+  border-left-color: #7529bd  ;
+  border-right-color: #7529bd  ;
+}
+
+.btn2{
+  background-color: #d1c627;
+  color: rgb(19, 1, 1);
+  font-size: 15px;
+  margin: 6px 6px;
+  border-radius: 15px;
+  height: 30px;
+  
+}
+
+.btn3{
+  color: rgb(19, 1, 1);
+  font-size: 30px;
+  /* text-align: center; */
+  margin: 6px 6px;
+  border-radius: 100%;
+  width: 40px;
+  height: 40px;
+  
+  
+}
+.txt-event{
+  margin-top: 20px;
+  font-size: 10px;
+  display: flex;
+  left: 0px;
 }
 .scheduler{
   display: block;
