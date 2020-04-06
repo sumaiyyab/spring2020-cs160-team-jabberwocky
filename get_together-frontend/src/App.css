@@ -1,5 +1,18 @@
 .App {
   text-align: center;
+  display: flex;
+  flex-direction: row;
+}
+
+.left-column{
+  display: flex;
+  flex-direction: column;
+  width: 10%;
+}
+.scheduler{
+  display: block;
+  left:0px;
+  width: 85%;
 }
 
 .App-logo {
