@@ -1,5 +1,6 @@
 package com.jabberwocky.getTogether;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -14,31 +15,51 @@ import lombok.Setter;
 public class Event {
 	
 	@Id
-	private String eventID;
+	private String id;	
+	private String userID;
 	private User host;
-	private String title;
+	public String title;
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
-	private int duration;
+	private LocalDate startDate;
+	private LocalDate endDate;
 	private String location;
 	private ArrayList<String> tags;
+	private ArrayList<User> invited;
 	private ArrayList<User> rsvp;
 	
-	public Event(User host, String title, LocalDateTime startTime, int duration, String location, ArrayList<String> tags) {
-		this.host = host;
+	
+	public Event(String userID, String title, String location, ArrayList<String> tags, ArrayList<User> invited, LocalDate startDate, LocalDate endDate) {
+		this.userID = userID;
 		this.title = title;
-		this.startTime = startTime;
-		this.duration = duration;
+		//this.startTime = startTime;
+		//this.endTime = endTime;
 		this.location = location;
-		this.tags = tags;
+		if(tags == null) {
+			this.tags = new ArrayList<>();
+		}else {
+			this.tags = tags;
+		}
+		
 		this.rsvp = new ArrayList<>();
+		
+		// Created invited arrayList for people who haven't rsvpsd
+		this.invited = invited;
+		
+		this.startDate = startDate;
+		this.endDate = endDate;
 	}
 	
-	public ArrayList<User> getRSVP(){
-		return rsvp;
+	public void setHost(User person) {
+		host = person;
+		rsvp.add(person);
 	}
 	
 	public void addAttendee(User user) {
 		rsvp.add(user);
+	}
+	
+	public void findTimes() {
+		// go through the rsvp list and find times within the dates
 	}
 }
