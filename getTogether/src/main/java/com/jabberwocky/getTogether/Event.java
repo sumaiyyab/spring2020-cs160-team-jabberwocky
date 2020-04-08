@@ -78,20 +78,12 @@ public class Event {
 	public Event(String hostID, String title, ArrayList<User> invited, LocalDate startPossible, LocalDate endPossible, int duration) { 
 		//used when first creating event, before searching
 		this.hostID = hostID;
+		this.title = title;
+		this.invited = invited;
 		this.startPossible = startPossible;
 		this.endPossible = endPossible;
 		this.duration = duration;
-		
-		if(invited == null) {
-			this.invited= new ArrayList<>();
-		}else {
-			this.invited = invited;
-		}
 		this.rsvp = new ArrayList<>();
-		this.startTime = null;
-		this.endTime = null;
-		this.tags = null;
-		this.location = null;
 	}
 	
 	// 3. Constructor for generating temporary event objects to determine timing

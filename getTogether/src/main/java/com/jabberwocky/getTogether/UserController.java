@@ -37,8 +37,13 @@ public class UserController {
 	}
 
 	@GetMapping("/users/{id}")
-	public @ResponseBody ResponseEntity<Optional<User>> getUserById (@PathVariable String id){
-		return ResponseEntity.ok(repo.findById(id));
+	public @ResponseBody ResponseEntity<User> getUserById (@PathVariable String id){
+		Optional<User> opt = repo.findById(id);
+		if (opt.isPresent()) {
+			return ResponseEntity.ok(opt.get());
+		}
+		else 
+			return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
 	}
 
 	@PutMapping("/users/{id}")
