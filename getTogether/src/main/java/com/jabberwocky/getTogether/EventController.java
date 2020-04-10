@@ -80,6 +80,7 @@ public class EventController {
 								}	
 							}
 
+							newEvent.setRsvp(new ArrayList<>());
 							// Assuming the application has checked the entire rsvp list with no errors, the new event will be saved
 							repo.save(newEvent);
 							return new ResponseEntity<Event>(newEvent, HttpStatus.CREATED);	
@@ -99,6 +100,7 @@ public class EventController {
 									return new ResponseEntity<Event>(HttpStatus.NOT_FOUND);
 								}		
 							}
+							newEvent.setRsvp(new ArrayList<>());
 							repo.save(newEvent);
 							return new ResponseEntity<Event>(newEvent, HttpStatus.CREATED);
 						}	
@@ -113,120 +115,154 @@ public class EventController {
 		return new ResponseEntity<Event>(HttpStatus.NOT_FOUND);	// 404
 	}
 
-
-
 	@PutMapping("/events/{id}")
 	public @ResponseBody ResponseEntity<Event> updateEventById (@PathVariable String id, @RequestBody Event updatedEvent){
 
 		// Event stored in db that will be updated
-		Event event = this.getEventById(id).getBody();	
 
-		// Verifying that the updatedEvent's host user is stored in the user db
-		ResponseEntity<User> res = userCont.getUserById(updatedEvent.getHostID());	
-		if(res. && updatedEvent.getTitle() != null) {
+		ResponseEntity<Event> event1 = this.getEventById(id);	
+		if (event1.getStatusCode() != HttpStatus.OK) {
+			return new ResponseEntity<Event> (HttpStatus.NOT_FOUND); // 406
+		}
+		Event event = event1.getBody();
 
-			// Checks for Constructor 1
-			if(updatedEvent.getStartTime() != null) {
-
-				// Ensures that startTime is before endTime, the location isn't null, and that the tag list isn't null
-				if(updatedEvent.getStartTime().isBefore(updatedEvent.getEndTime()) && updatedEvent.getLocation() != null && updatedEvent.getTags() != null) {
-
-					/**
-					 * I will use this HashSet to track any changes from invited to rsvp
-					 */
-					HashSet<User> attendeeStatus = new HashSet<User>();
-
-					// Ensures that every user in rsvp is inside the user db
-					ArrayList<User> rsvp = updatedEvent.getRsvp();
-					for(User user : rsvp) {
-						attendeeStatus.add(user);
-						host = userCont.getUserById(user.getId()).getBody();
-						if(!host.isPresent()) {
-							return new ResponseEntity<Event>(HttpStatus.NOT_FOUND);
+		
+		if(updatedEvent.getHostID() != null) {
+			ResponseEntity<User> res = userCont.getUserById(updatedEvent.getHostID());		
+			if (res.getStatusCode() == HttpStatus.OK) {
+		
+				if(updatedEvent.getTitle() != null) {
+		
+					// Checks for Constructor 1
+					if(updatedEvent.getStartTime() != null) {
+		
+						// Ensures that startTime is before endTime, the location isn't null, and that the tag list isn't null
+						if(updatedEvent.getStartTime().isBefore(updatedEvent.getEndTime()) && updatedEvent.getLocation() != null && updatedEvent.getTags() != null) {
+		
+							/**
+							 * I will use this HashSet to track any changes from invited to rsvp
+							 **/
+							
+							HashSet<User> attendeeStatus = new HashSet<User>();
+		
+							// Ensures that every user in rsvp is inside the user db
+							ArrayList<User> rsvp = updatedEvent.getRsvp();
+							if(rsvp != null) {
+								for(User user : rsvp) {
+									ResponseEntity<User> userRes = userCont.getUserById(user.getId());
+									if(userRes.getStatusCode() == HttpStatus.NOT_FOUND) {
+										return new ResponseEntity<Event>(HttpStatus.NOT_FOUND);
+									}	
+									attendeeStatus.add(user);
+								}
+							}
+							
+							// Ensures that every user in the invite list is inside the user db
+							ArrayList<User> invited = updatedEvent.getInvited();
+							int index = 0;
+							
+							if(invited != null) {
+								for(User user : invited) {
+									ResponseEntity<User> userRes = userCont.getUserById(user.getId());
+									if(userRes.getStatusCode() == HttpStatus.NOT_FOUND) {
+										return new ResponseEntity<Event>(HttpStatus.NOT_FOUND);
+									}else{
+			
+										// If a user was in the attendeeStatus list, they've moved from invited to rsvp
+										if(!attendeeStatus.add(user)) {
+											invited.remove(index);
+										}else {
+											return new ResponseEntity<Event>(HttpStatus.NOT_FOUND);
+										}	
+									}	
+									index++;
+								}
+							}
+							// Updating the event in the db with the updated event's information		
+							event.setHostID(updatedEvent.getHostID());
+							event.setTitle(updatedEvent.getTitle());
+							event.setLocation(updatedEvent.getLocation());
+							event.setTags(updatedEvent.getTags());
+							if(updatedEvent.getInvited() != null) { event.setInvited(updatedEvent.getInvited());};
+							if(updatedEvent.getRsvp() != null) { event.setRsvp(updatedEvent.getRsvp());};
+							event.setStartTime(updatedEvent.getStartTime());
+							event.setEndTime(updatedEvent.getEndTime());
+							
+							// Set these values to null because the event has been finalized
+							event.setEndPossible(null);
+							event.setStartPossible(null);
+		
+							// Assuming the application has checked the entire rsvp list with no errors, the new event will be saved
+							repo.save(event);
+							return ResponseEntity.ok(event);
+						}
+					}
+		
+					// Checks for Constructor 2
+					else if(updatedEvent.getStartPossible() != null) {
+		
+						// Ensures that startPossible is before endPossible, the invited list isn't null , and that there's a duration longer than 0 minutes
+						if(updatedEvent.getStartPossible().isBefore(updatedEvent.getEndPossible()) && updatedEvent.getInvited() != null && updatedEvent.getDuration() > 0) {
+		
+							HashSet<User> attendeeStatus = new HashSet<User>();
+							
+							// Ensures that every user in rsvp is inside the user db
+							ArrayList<User> rsvp = updatedEvent.getRsvp();
+							if(rsvp != null) {
+								for(User user : rsvp) {
+									ResponseEntity<User> userRes = userCont.getUserById(user.getId());
+									if(userRes.getStatusCode() == HttpStatus.NOT_FOUND) {
+										return new ResponseEntity<Event>(HttpStatus.NOT_FOUND);
+									}		
+									attendeeStatus.add(user);
+								}
+							}
+							
+							int index = 0;
+							
+							// Ensures that every user in the invite list is inside the user db
+							ArrayList<User> invited = updatedEvent.getInvited();
+							
+							if(invited != null) {
+								for(User user : invited) {
+									ResponseEntity<User> userRes = userCont.getUserById(user.getId());
+									if(userRes.getStatusCode() == HttpStatus.NOT_FOUND) {
+										return new ResponseEntity<Event>(HttpStatus.NOT_FOUND);
+									}else{
+			
+										// If a user was in the attendeeStatus list, they've moved from invited to rsvp
+										if(!attendeeStatus.add(user)) {
+											invited.remove(index);
+										}else {
+											return new ResponseEntity<Event>(HttpStatus.NOT_FOUND);
+										}	
+									}	
+									index++;		
+								}
+							}
+		
+							// Updating the event in the db with the updated event's information		
+							event.setHostID(updatedEvent.getHostID());
+							event.setTitle(updatedEvent.getTitle());
+							event.setLocation(updatedEvent.getLocation());
+							event.setTags(updatedEvent.getTags());
+							event.setStartPossible(updatedEvent.getStartPossible());
+							event.setEndPossible(updatedEvent.getEndPossible());
+							event.setDuration(updatedEvent.getDuration());
+							if(updatedEvent.getInvited() != null) { event.setInvited(updatedEvent.getInvited());};
+							if(updatedEvent.getRsvp() != null) { event.setRsvp(updatedEvent.getRsvp());};
+		
+							repo.save(event);
+							return ResponseEntity.ok(event);
 						}	
 					}
-
-					// Ensures that every user in the invite list is inside the user db
-					ArrayList<User> invited = updatedEvent.getInvited();
-					int index = 0;
-
-					for(User user : invited) {
-						host = userCont.getUserById(user.getId()).getBody();
-						if(!host.isPresent()) {
-
-							// If a user was in the attendeeStatus list, they've moved from invited to rsvp
-							if(!attendeeStatus.add(user)) {
-								invited.remove(index);
-							}else {
-								return new ResponseEntity<Event>(HttpStatus.NOT_FOUND);
-							}	
-						}	
-						index++;
-					}
-
-					// Updating the event in the db with the updated event's information		
-					event.setHostID(updatedEvent.getHostID());
-					event.setTitle(updatedEvent.getTitle());
-					event.setLocation(updatedEvent.getLocation());
-					event.setTags(updatedEvent.getTags());
-					event.setInvited(updatedEvent.getInvited());
-					event.setStartTime(updatedEvent.getStartTime());
-					event.setEndTime(updatedEvent.getEndTime());
-
-					// Set these values to null because the event has been finalized
-					event.setEndPossible(null);
-					event.setStartPossible(null);
-
-					// Assuming the application has checked the entire rsvp list with no errors, the new event will be saved
-					repo.save(event);
-					return ResponseEntity.ok(event);
 				}
 			}
-
-			// Checks for Constructor 2
-			else if(updatedEvent.getStartPossible() != null) {
-
-				// Ensures that startPossible is before endPossible, the invited list isn't null , and that there's a duration longer than 0 minutes
-				if(updatedEvent.getStartPossible().isBefore(updatedEvent.getEndPossible()) && updatedEvent.getInvited() != null && updatedEvent.getDuration() > 0) {
-
-					// Ensures that every user in rsvp is inside the user db
-					ArrayList<User> rsvp = updatedEvent.getRsvp();
-					for(User user : rsvp) {
-						host = userCont.getUserById(user.getId()).getBody();
-						if(!host.isPresent()) {
-							return new ResponseEntity<Event>(HttpStatus.NOT_FOUND);
-						}	
-					}
-
-					// Ensures that every user in the invite list is inside the user db
-					rsvp = updatedEvent.getInvited();
-					for(User user : rsvp) {
-						host = userCont.getUserById(user.getId()).getBody();
-						if(!host.isPresent()) {
-							return new ResponseEntity<Event>(HttpStatus.NOT_FOUND);
-						}	
-					}
-
-					// Updating the event in the db with the updated event's information		
-					event.setHostID(updatedEvent.getHostID());
-					event.setTitle(updatedEvent.getTitle());
-					event.setLocation(updatedEvent.getLocation());
-					event.setTags(updatedEvent.getTags());
-					event.setInvited(updatedEvent.getInvited());
-					event.setStartPossible(updatedEvent.getStartPossible());
-					event.setEndPossible(updatedEvent.getEndPossible());
-					event.setDuration(updatedEvent.getDuration());
-
-
-					repo.save(event);
-					return ResponseEntity.ok(event);
-				}	
-			}
-
 		}
 
-		return new ResponseEntity<Event>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<Event>(event1.getStatusCode());
 	}
+	
 
 	@DeleteMapping("/events/{id}")
 	public @ResponseBody ResponseEntity<Event> deleteEventById (@PathVariable String id) {
@@ -266,15 +302,6 @@ public class EventController {
 		}else {
 			return new ResponseEntity<List<User>>(HttpStatus.NOT_FOUND);
 		}
-	}
-
-
-	// Do we need this if it's handled by updated user??
-	@PostMapping("/events/{id}/attendees")
-	public @ResponseBody ResponseEntity<List<User>> addAttendee (@RequestBody User user, Event event, String eventID) {
-		event.addAttendee(user);
-		repo.save(event);
-		return ResponseEntity.ok(repo.findById(eventID).get().getRsvp());
 	}
 
 
