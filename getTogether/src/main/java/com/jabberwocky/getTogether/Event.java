@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceConstructor;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -28,11 +30,28 @@ public class Event {
 	private ArrayList<String> tags;
 	private ArrayList<User> invited;
 	private ArrayList<User> rsvp;
+	
+	public Event() {
+		this.title="Gotchya";
+		
+	}
+	
+	/**
+	 * What we can do: make 1 constructor with extra variable of how it's declared
+	 * @param hostID
+	 * @param title
+	 * @param location
+	 * @param tags
+	 * @param invited
+	 * @param startTime
+	 * @param endTime
+	 */
 
-
-	public Event(String userID, String title, String location, ArrayList<String> tags, ArrayList<User> invited, LocalDateTime startTime, LocalDateTime endTime) {
+	// 1. Constructor for creating a finalized event
+	//@PersistenceConstructor
+	public Event(String hostID, String title, String location, ArrayList<String> tags, ArrayList<User> invited, LocalDateTime startTime, LocalDateTime endTime) {
 		//the Actual filled out event; the only kind of event that should be saved to repo
-		this.hostID = userID;
+		this.hostID = hostID;
 		this.title = title;
 		this.location = location;
 		if(tags == null) {
@@ -44,24 +63,40 @@ public class Event {
 		this.rsvp = new ArrayList<>();
 
 		// Created invited arrayList for people who haven't rsvpsd
-		this.invited = invited;
+		if(invited == null) {
+			this.invited= new ArrayList<>();
+		}else {
+			this.invited = invited;
+		}
 
 		this.startTime = startTime;
 		this.endTime = endTime;
 	}
 
-	public Event(String userID, String title, ArrayList<User> invited, LocalDate startPossible, LocalDate endPossible, int duration) { 
+	// 2. Constructor for generating possible events
+	//@PersistenceConstructor
+	public Event(String hostID, String title, ArrayList<User> invited, LocalDate startPossible, LocalDate endPossible, int duration) { 
 		//used when first creating event, before searching
+		this.hostID = hostID;
+		this.title = title;
+		this.invited = invited;
 		this.startPossible = startPossible;
 		this.endPossible = endPossible;
 		this.duration = duration;
+		this.rsvp = new ArrayList<>();
 	}
 	
+	// 3. Constructor for generating temporary event objects to determine timing
+//	@PersistenceConstructor
 	public Event(LocalDateTime startTime, LocalDateTime endTime) { //used when presenting potential events that could fit free time
 		this.startTime = startTime;
 		this.endTime = endTime;
 	}
 
+	/*
+	 * Can only add an attendee if they've been on the invited list
+	 * Delete this?
+	 */
 	public void addAttendee(User user) {
 		rsvp.add(user);
 	}
