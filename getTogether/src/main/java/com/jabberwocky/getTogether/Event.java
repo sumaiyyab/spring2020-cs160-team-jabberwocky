@@ -11,10 +11,12 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class Event {
 
 	@Id
@@ -30,11 +32,6 @@ public class Event {
 	private ArrayList<String> tags;
 	private ArrayList<User> invited;
 	private ArrayList<User> rsvp;
-	
-	public Event() {
-		this.title="Gotchya";
-		
-	}
 	
 	/**
 	 * What we can do: make 1 constructor with extra variable of how it's declared
@@ -98,7 +95,7 @@ public class Event {
 	 * Delete this?
 	 */
 	public void addAttendee(User user) {
-		rsvp.add(user);
+		invited.add(user);
 	}
 
 	public boolean hasOverlapWith(LocalDateTime start2, LocalDateTime end2) {
