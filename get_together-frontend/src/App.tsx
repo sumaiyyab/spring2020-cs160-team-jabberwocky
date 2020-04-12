@@ -3,9 +3,10 @@ import logo from './logo.svg';
 import './App.css';
 import Avatar from 'react-avatar';
 import PopUp from "./PopUp"
+import Login from "./login"
 
 // import {ScheduleComponent} from '@syncfusion/ej2-react-schedule'
-
+// AIzaSyAc-6mjL1ySARy7FyPgoYGez9yFQ9ETDtQ
 import {Inject,ScheduleComponent,Day,Week,Month,Agenda,WorkWeek,EventSettingsModel} from '@syncfusion/ej2-react-schedule'
 import { Button } from '@syncfusion/ej2-buttons';
 import { Schedule} from '@syncfusion/ej2-schedule';
@@ -33,7 +34,9 @@ function App(){
     setOpen(true)
   }
   return <div className= "App">
+    <Login/>
     <div className= "left-column">
+
     <Avatar name="Fereshta Alavy" size="130" textSizeRatio={1.75} round={true} />
     <div>Fereshta profile</div>
     <button className = "btn1">Home</button>{' '}
