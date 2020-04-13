@@ -26,6 +26,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class EventController {	
 	@Autowired 
 	private EventRepo repo;
+	
+	@Autowired 
+	private UserRepo userRepo;
 
 	// Always use autowired to make sure it's connected for repos and controllers 
 	@Autowired 
@@ -77,6 +80,12 @@ public class EventController {
 							}
 							// Assuming the application has checked the entire invite list with no errors, the new event will be saved
 							repo.save(newEvent);
+							
+							// Get the host of the Event and add the event to the User's event list
+							User user = res.getBody();
+							ArrayList<Event> events = user.getEvents();
+							events.add(newEvent);
+							userRepo.save(user);
 							return new ResponseEntity<Event>(newEvent, HttpStatus.CREATED);	
 						}	
 					}
@@ -131,24 +140,36 @@ public class EventController {
 							 **/
 
 							HashSet<User> attendeeStatus = new HashSet<User>();
+							
+							ArrayList<User> addEventToUser = new ArrayList<>();
 
 							// Ensures that every user in the invite list is inside the user db
 							ArrayList<User> invited = updatedEvent.getInvited();
 							int index = 0;
 
 							if(invited != null) {
+								
+								// Goes through an event's invited list and verifies that all users exist in the User repo
 								for(User user : invited) {
 									ResponseEntity<User> userRes = userCont.getUserById(user.getId());
 									if(userRes.getStatusCode() == HttpStatus.NOT_FOUND) {
 										return new ResponseEntity<Event>(HttpStatus.NOT_FOUND);
 									}else{
-
+										addEventToUser.add(user);
+										// Check if user is free at time of event
+										// I used this stack overflow to determine the duration of the event: https://stackoverflow.com/questions/25747499/java-8-difference-between-two-localdatetime-in-multiple-units
+										//int duration = updatedEvent.calculateDuration();
+										//if(user.isFreeAt(updatedEvent.getStartTime(), duration)) {
+											
+									//	}
+										/**
+										
 										// If a user was in the attendeeStatus list, they've moved from invited to rsvp
 										if(!attendeeStatus.add(user)) {
 											invited.remove(index);
 										}else {
 											return new ResponseEntity<Event>(HttpStatus.NOT_FOUND);
-										}	
+										}	**/
 									}	
 									index++;
 								}
@@ -157,13 +178,22 @@ public class EventController {
 							event.setHostID(updatedEvent.getHostID());
 							event.setTitle(updatedEvent.getTitle());
 							event.setLocation(updatedEvent.getLocation());
-//							event.setTags(updatedEvent.getTags());
+							// event.setTags(updatedEvent.getTags());
 							if(updatedEvent.getInvited() != null) { event.setInvited(updatedEvent.getInvited());};
 							event.setStartTime(updatedEvent.getStartTime());
 							event.setEndTime(updatedEvent.getEndTime());
 
 							// Assuming the application has checked the entire rsvp list with no errors, the new event will be saved
 							repo.save(event);
+							
+							// Go through users who are free at event time and add to their event list
+							for(int i = 0; i < addEventToUser.size(); i++) {
+								User user = addEventToUser.get(i);
+								ArrayList<Event> events = user.getEvents();
+								events.add(event);
+								userRepo.save(user);
+							}
+
 							return ResponseEntity.ok(event);
 						}
 					}

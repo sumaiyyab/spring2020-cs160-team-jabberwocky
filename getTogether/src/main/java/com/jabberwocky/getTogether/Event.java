@@ -2,6 +2,7 @@ package com.jabberwocky.getTogether;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -52,7 +53,7 @@ public class Event {
 
 	// 1. Constructor for creating a finalized event
 	//@PersistenceConstructor
-	public Event(String hostID, String title, String location, ArrayList<String> tags, ArrayList<String> invitedIds, LocalDateTime startTime, LocalDateTime endTime) {
+	public Event(String hostID, String title, String location, ArrayList<String> invitedIds, LocalDateTime startTime, LocalDateTime endTime) {
 		//the Actual filled out event; the only kind of event that should be saved to repo
 		this.hostID = hostID;
 		this.title = title;
@@ -113,6 +114,31 @@ public class Event {
 		if (invited.contains(user)) {
 			invited.remove(user);
 		}
+	}
+	
+	public int calculateDuration() {
+		LocalDateTime fromDateTime = LocalDateTime.of(1984, 12, 16, 7, 45, 55); // startTime
+		LocalDateTime toDateTime = LocalDateTime.of(2014, 9, 10, 6, 40, 45);
+
+		LocalDateTime tempDateTime = LocalDateTime.from(startTime);
+
+		long years = tempDateTime.until( endTime, ChronoUnit.YEARS );
+		tempDateTime = tempDateTime.plusYears( years );
+
+		long months = tempDateTime.until( endTime, ChronoUnit.MONTHS );
+		tempDateTime = tempDateTime.plusMonths( months );
+
+		long days = tempDateTime.until( endTime, ChronoUnit.DAYS );
+		tempDateTime = tempDateTime.plusDays( days );
+
+
+		long hours = tempDateTime.until( endTime, ChronoUnit.HOURS );
+		tempDateTime = tempDateTime.plusHours( hours );
+
+		long minutes = tempDateTime.until( endTime, ChronoUnit.MINUTES );
+		
+		return (int) (minutes + (hours * 60) + (days*24*60) + (months * 31 * 24 * 60) + (years * 12 * 31 * 24 * 60));
+		
 	}
 
 	public boolean hasOverlapWith(LocalDateTime start2, LocalDateTime end2) {
