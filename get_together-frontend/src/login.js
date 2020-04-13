@@ -12,7 +12,9 @@ import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-
+import {
+  withRouter
+} from 'react-router-dom'
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -57,9 +59,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignInSide() {
+function SignInSide({history}) {
   const classes = useStyles();
 
+  function handleSubmitClick(event){
+    console.log('here')
+    history.push('/dashboard')
+  }
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
@@ -72,7 +78,7 @@ export default function SignInSide() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <form className={classes.form} noValidate>
+          <form className={classes.form} noValidate onSubmit={handleSubmitClick}>
             <TextField
               variant="outlined"
               margin="normal"
@@ -129,3 +135,5 @@ export default function SignInSide() {
     </Grid>
   );
 }
+
+export default withRouter(SignInSide)
