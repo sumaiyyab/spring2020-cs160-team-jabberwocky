@@ -155,6 +155,7 @@ public class EventController {
 									if(userRes.getStatusCode() == HttpStatus.NOT_FOUND) {
 										return new ResponseEntity<Event>(HttpStatus.NOT_FOUND);
 									}else{
+										
 										addEventToUser.add(user);
 										// Check if user is free at time of event
 										// I used this stack overflow to determine the duration of the event: https://stackoverflow.com/questions/25747499/java-8-difference-between-two-localdatetime-in-multiple-units
@@ -191,9 +192,10 @@ public class EventController {
 								User user = addEventToUser.get(i);
 								ArrayList<Event> events = user.getEvents();
 								events.add(event);
-								userRepo.save(user);
+								user.setEvents(events);
+								userCont.updateUserForEvents(user);
+								//userRepo.save(user);
 							}
-
 							return ResponseEntity.ok(event);
 						}
 					}
