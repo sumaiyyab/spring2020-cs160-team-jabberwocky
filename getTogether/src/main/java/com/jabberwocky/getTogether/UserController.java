@@ -1,5 +1,6 @@
 package com.jabberwocky.getTogether;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +35,27 @@ public class UserController {
 	public @ResponseBody ResponseEntity<User> addNewUser (@RequestBody User newUser) {
 		repo.save(newUser);
 		return new ResponseEntity<User>(newUser, HttpStatus.CREATED);
+	}
+	
+	@PostMapping("/login")
+	public @ResponseBody ResponseEntity<User> loginUser (@RequestBody String userInfo) {
+		
+		//Optional<User> opt = repo.findById(id);
+		
+		String username = userInfo.substring(2, userInfo.indexOf(',') - 1);
+		String password = userInfo.substring(userInfo.indexOf(',') + 3, userInfo.length() - 2);
+		ArrayList<User> users = repo.findByUsername(username);
+		if (users.size() > 0) {
+			
+			for(User user: users) {
+				if(user.getPassword() == (password + user.getHash()).hashCode()) {
+					return new ResponseEntity<User>(HttpStatus.ACCEPTED);
+				}
+			}
+			return new ResponseEntity<User>(HttpStatus.UNAUTHORIZED);
+		}
+		else 
+			return new ResponseEntity<User>(HttpStatus.UNAUTHORIZED);
 	}
 
 	@GetMapping("/users/{id}")

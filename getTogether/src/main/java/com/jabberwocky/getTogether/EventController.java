@@ -3,6 +3,7 @@ package com.jabberwocky.getTogether;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class EventController {	
 	@Autowired 
 	private EventRepo repo;
-
+	
 	// Always use autowired to make sure it's connected for repos and controllers 
 	@Autowired 
 	private UserController userCont;
@@ -36,21 +37,10 @@ public class EventController {
 		// This returns a JSON or XML with the users
 		return ResponseEntity.ok(repo.findAll());
 	}
-
-
-	// instead of returning optional, make sure it contains something before returning it or else 404
-	@GetMapping("/events/{id}")
-	public @ResponseBody ResponseEntity<Event> getEventById (@PathVariable String id){
-
-		Optional<Event> event = repo.findById(id);
-		if (event.isPresent()) {
-			return ResponseEntity.ok(event.get());
-		}
-		else {
-			return new ResponseEntity<Event>(HttpStatus.NOT_FOUND);
-		}
-
-	}
+	
+	// addNewEvent
+	// edit requestBody
+	// troubleshooted event creation with getter and setters
 
 	@PostMapping("/events")
 	public @ResponseBody ResponseEntity<Event> addNewEvent (@RequestBody Event newEvent) {
@@ -100,6 +90,18 @@ public class EventController {
 			else { return new ResponseEntity<Event> (HttpStatus.NOT_ACCEPTABLE); } //406
 		}
 		return new ResponseEntity<Event>(HttpStatus.NOT_FOUND);	// 404
+	}
+
+
+	// instead of returning optional, make sure it contains something before returning it or else 404
+	@GetMapping("/events/{id}")
+	public @ResponseBody ResponseEntity<Event> getEventById (@PathVariable String id){
+		Optional<Event> opt = repo.findById(id);
+		if (opt.isPresent()) {
+			return ResponseEntity.ok(opt.get());
+		}
+		else 
+			return new ResponseEntity<Event>(HttpStatus.NOT_FOUND);
 	}
 
 	@PutMapping("/events/{id}")
@@ -220,19 +222,10 @@ public class EventController {
 		return new ResponseEntity<Event>(event1.getStatusCode());
 	}
 
-
 	@DeleteMapping("/events/{id}")
 	public @ResponseBody ResponseEntity<Event> deleteEventById (@PathVariable String id) {
-
-		// Event stored in db that will be deleted
-		Optional<Event> event = repo.findById(id);
-		if (event.isPresent()) {
-			repo.deleteById(id);
-			return new ResponseEntity<Event>(HttpStatus.NO_CONTENT);
-		}
-		else {
-			return new ResponseEntity<Event>(HttpStatus.NOT_FOUND);
-		}
+		repo.deleteById(id);
+		return new ResponseEntity<Event>(HttpStatus.NO_CONTENT);
 	}
 
 	@GetMapping("/events/{id}/invited")
@@ -246,6 +239,7 @@ public class EventController {
 		}else {
 			return new ResponseEntity<List<User>>(HttpStatus.NOT_FOUND);
 		}
+
 	}
 
 	@PutMapping("/events/{id}/invited/{userID}")
@@ -283,4 +277,5 @@ public class EventController {
 		}
 		else { return new ResponseEntity<>(res.getStatusCode()); }
 	}
+
 }

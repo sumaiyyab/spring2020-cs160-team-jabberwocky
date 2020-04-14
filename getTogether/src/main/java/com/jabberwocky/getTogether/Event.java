@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.Id;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -50,15 +51,20 @@ public class Event {
 	 * @param endTime
 	 */
 
+
 	// 1. Constructor for creating a finalized event
 	//@PersistenceConstructor
 	public Event(String hostID, String title, String location, ArrayList<String> tags, ArrayList<String> invitedIds, LocalDateTime startTime, LocalDateTime endTime) {
+
+
+
 		//the Actual filled out event; the only kind of event that should be saved to repo
 		this.hostID = hostID;
 		this.title = title;
 		this.location = location;
 //		if(tags == null) { this.tags = new ArrayList<>(); }
 //		else { this.tags = tags; }
+
 
 		if(invited == null) {
 			this.invited = new ArrayList<>();
@@ -72,6 +78,7 @@ public class Event {
 			}
 		}
 
+
 		this.startTime = startTime;
 		this.endTime = endTime;
 
@@ -81,6 +88,7 @@ public class Event {
 	// 2. Constructor for generating possible events
 	//@PersistenceConstructor
 	public Event(String hostID, String title, ArrayList<String> invitedIds, int duration) { 
+
 		//used when first creating event, before searching
 
 		this.hostID = hostID;
@@ -95,16 +103,15 @@ public class Event {
 		this.duration = duration;
 	}
 
+
 	// 3. Constructor for generating temporary event objects to determine timing
-	//	@PersistenceConstructor
+
+
 	public Event(LocalDateTime startTime, LocalDateTime endTime) { //used when presenting potential events that could fit free time
 		this.startTime = startTime;
 		this.endTime = endTime;
 	}
 
-	/*
-	 * Can only add an attendee if they've been on the invited list
-	 */
 	public void addAttendee(User user) {
 		invited.add(user);
 	}
