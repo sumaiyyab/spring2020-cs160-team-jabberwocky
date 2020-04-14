@@ -39,7 +39,6 @@ public class UserController {
 	
 	@PostMapping("/login")
 	public @ResponseBody ResponseEntity<User> loginUser (@RequestBody JSONObject userInfo) {
-		System.out.println(userInfo);
 		
 		//Optional<User> opt = repo.findById(id);
 //		String username = userInfo.substring(3, userInfo.indexOf(',') - 1);
@@ -48,6 +47,7 @@ public class UserController {
 
 		String password = null;
 		String username = null;
+		System.out.print(userInfo);
 		try {
 			password = userInfo.getString("password");
 			username = userInfo.getString("username");
