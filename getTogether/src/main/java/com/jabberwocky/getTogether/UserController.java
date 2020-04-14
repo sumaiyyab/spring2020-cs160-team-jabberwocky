@@ -70,7 +70,24 @@ public class UserController {
 
 	@PutMapping("/users/{id}")
 	public @ResponseBody ResponseEntity<User> updateUserById (@PathVariable String id, @RequestBody User updatedUser){
+		ResponseEntity<User> res = this.getUserById(updatedUser.getId());		
+		if (res.getStatusCode() == HttpStatus.OK) {
+			User user = res.getBody();
+			user.setEvents(updatedUser.getEvents());
+		}
 		repo.save(updatedUser);
+		return ResponseEntity.ok(updatedUser);
+	}
+	
+	@PutMapping("/users/updateEvents")
+	public @ResponseBody ResponseEntity<User> updateUserForEvents  (@RequestBody User updatedUser){
+		ResponseEntity<User> res = this.getUserById(updatedUser.getId());		
+		if (res.getStatusCode() == HttpStatus.OK) {
+			User user = res.getBody();
+			user.setEvents(updatedUser.getEvents());
+			repo.save(user);
+		}
+		
 		return ResponseEntity.ok(updatedUser);
 	}
 
