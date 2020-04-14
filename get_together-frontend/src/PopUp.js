@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import DateFnUtils from "@date-io/date-fns"
-import {DateTimePicker, MuiPickersUtilsProvider} from '@material-ui/pickers'
+import {DatePicker, MuiPickersUtilsProvider} from '@material-ui/pickers'
 import { Dialog, TextField, DialogActions, DialogTitle, DialogContent, DialogContentText, Button, Tab } from '@material-ui/core';
 
 export default function PopUp({open, handleClose, submitData}){
@@ -24,9 +24,9 @@ export default function PopUp({open, handleClose, submitData}){
             Select time and date and enter a description for your event. 
           </DialogContentText>
           <MuiPickersUtilsProvider utils={DateFnUtils}>
-            <DateTimePicker value={selectedStartDate} onChange={handleStartDateChange} label="From"/>
+            <DatePicker value={selectedStartDate} onChange={handleStartDateChange} label="From"/>
             <Tab/>
-            <DateTimePicker value={selectedEndDate} onChange={handleEndDateChange} label="To"/>
+            <DatePicker value={selectedEndDate} onChange={handleEndDateChange} label="To"/>
         </MuiPickersUtilsProvider>
           <TextField
             autoFocus

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,6 +12,7 @@ import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
+import axios from 'axios'
 import signUp from './signUp';
 
 import {
@@ -64,13 +65,27 @@ const useStyles = makeStyles((theme) => ({
 
 function SignInSide({history}) {
   const classes = useStyles();
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+
+  function handleUsernameChange(event){
+    setUsername(event.target.value);
+  }
+
+  function handlePasswordChange(event) {
+    setPassword(event.target.value);
+  }
 
   function handleSubmitClick(event){
-      if (classes.submit)
-        history.push('/dashboard')
-     if(classes.Link) 
-     history.push('/signUp')
-    console.log('here')
+    event.preventDefault();
+    console.log(username)
+    axios.post('http://localhost:8080/login', {"username":username,"password": password}).then((user)=>{
+      console.log(user)
+      history.push({pathname:'/dashboard', state: {id: user.data.id, name: user.data.fullName}})
+    }).catch((err)=>{
+      console.log(err)
+      alert("Invalid username or password")
+    })
   }
   return (
     <Grid container component="main" className={classes.root}>
@@ -91,9 +106,10 @@ function SignInSide({history}) {
               required
               fullWidth
               id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
+              label="Username"
+              name="username"
+              autoComplete="username"
+              onChange={handleUsernameChange}
               autoFocus
             />
             <TextField
@@ -105,6 +121,7 @@ function SignInSide({history}) {
               label="Password"
               type="password"
               id="password"
+              onChange={handlePasswordChange}
               autoComplete="current-password"
             />
             <FormControlLabel
