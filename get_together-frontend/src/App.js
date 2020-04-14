@@ -1,38 +1,37 @@
-import React, {useState, useEffect} from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
+import SignUp from './signUp';
 import './App.css';
-import './components/button';
-import axios from 'axios'
-function App() {
-  const [data, setData] = useState(null)
-  // onCreate 
-  useEffect(() => {
-    axios.get('https://opentdb.com/api.php?amount=10').then(data => setData(data.data.results))
-  }, [])
+import Login from "./login"
 
-  let index = 0
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+  Link
+} from "react-router-dom";
+import Scheduler from './Scheduler';
 
-  // let content = data ?
-  //   data.map(element => {
-  //     return <li key={element.correct_answer}>{element.correct_answer}</li>
-  //   })
-  //   : null
-
+function App(){  
+  
   return (
-    <div className="App">
-      <div>Hello World!</div>
-      <button text="hello world!"/>
-      <ul>
-        {
-          data ?
-          data.map(element => {
-            return <li key={element.correct_answer}>{element.correct_answer}</li>
-          })
-          : null
-        }
-      </ul>    
-    </div>
-  );
-}
+    <Router>
+     
+      <Switch>
+          <Route path="/login">
 
+            <Login />
+
+          </Route>
+        <Route path= "/signUp">
+              <SignUp />
+            </Route>
+          <Route path="/dashboard">
+            <Scheduler/>
+          </Route>
+        </Switch>
+    </Router>
+  ) 
+
+}
 export default App;

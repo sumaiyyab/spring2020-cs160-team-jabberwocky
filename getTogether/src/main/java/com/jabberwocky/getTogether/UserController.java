@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
-
+import org.json.*;
 
 @RestController
 @CrossOrigin
@@ -38,18 +38,39 @@ public class UserController {
 	}
 	
 	@PostMapping("/login")
-	public @ResponseBody ResponseEntity<User> loginUser (@RequestBody String userInfo) {
+	public @ResponseBody ResponseEntity<User> loginUser (@RequestBody JSONObject userInfo) {
 		
 		//Optional<User> opt = repo.findById(id);
-		
-		String username = userInfo.substring(2, userInfo.indexOf(',') - 1);
-		String password = userInfo.substring(userInfo.indexOf(',') + 3, userInfo.length() - 2);
+//		String username = userInfo.substring(3, userInfo.indexOf(',') - 1);
+//		String password = userInfo.substring(userInfo.indexOf(',') + 4, userInfo.length() - 3);
+
+
+		String password = null;
+		String username = null;
+		System.out.print(userInfo);
+		try {
+			password = userInfo.getString("password");
+			username = userInfo.getString("username");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		System.out.println(username);
+		System.out.println(password);
+
 		ArrayList<User> users = repo.findByUsername(username);
+		System.out.println(users);
 		if (users.size() > 0) {
-			
+
 			for(User user: users) {
+				System.out.println((password + user.getHash()).hashCode());
+				System.out.println(user.getPassword());
+
+				System.out.println(user.getId());
+
 				if(user.getPassword() == (password + user.getHash()).hashCode()) {
-					return new ResponseEntity<User>(HttpStatus.ACCEPTED);
+					ResponseEntity<User> returnUser = this.getUserById(user.getId());
+					return returnUser;
 				}
 			}
 			return new ResponseEntity<User>(HttpStatus.UNAUTHORIZED);
