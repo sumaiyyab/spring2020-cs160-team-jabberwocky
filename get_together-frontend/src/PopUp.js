@@ -17,7 +17,7 @@ export default function PopUp({open, handleClose, submitData}){
     }
     
     return (
-        <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" onExit={sendData}>
+        <Dialog id = "dialog" open={open} onClose={handleClose} aria-labelledby="form-dialog-title" onExit={sendData}>
         <DialogTitle id="form-dialog-title">Add Event</DialogTitle>
         <DialogContent>
           <DialogContentText>

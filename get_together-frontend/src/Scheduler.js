@@ -68,7 +68,7 @@ function Scheduler({location}){
     <button className = "btn1">Setting</button>{' '}
     <button className = "btn2">Peeps</button>{' '}
     <div className="txt-event">Create event</div>
-    <button className = "btn3" onClick={addevent}>+</button>{' '}
+    <button className = "btn3" id = "button3"onClick={addevent}>+</button>{' '}
     <PopUp open={open} handleClose={closePopUp} submitData={getData}/>
   
   </div>

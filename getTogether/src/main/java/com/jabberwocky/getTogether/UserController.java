@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.json.*;
+import org.json.simple.parser.JSONParser;
+import org.json.JSONObject;
 
 @RestController
 @CrossOrigin
@@ -38,28 +40,24 @@ public class UserController {
 	}
 	
 	@PostMapping("/login")
-	public @ResponseBody ResponseEntity<User> loginUser (@RequestBody JSONObject userInfo) {
+	public @ResponseBody ResponseEntity<User> loginUser (@RequestBody String obj) throws JSONException {
 		
-		//Optional<User> opt = repo.findById(id);
+//		Optional<User> opt = repo.findById(id);
 //		String username = userInfo.substring(3, userInfo.indexOf(',') - 1);
 //		String password = userInfo.substring(userInfo.indexOf(',') + 4, userInfo.length() - 3);
 
-
+		final JSONObject userInfo = new JSONObject(obj);
 		String password = null;
 		String username = null;
 		System.out.print(userInfo);
-		try {
-			password = userInfo.getString("password");
-			username = userInfo.getString("username");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+		password = userInfo.getString("password");
+		username = userInfo.getString("username");
 
 		System.out.println(username);
 		System.out.println(password);
 
 		ArrayList<User> users = repo.findByUsername(username);
-		System.out.println(users);
+//		System.out.println(users);
 		if (users.size() > 0) {
 
 			for(User user: users) {
