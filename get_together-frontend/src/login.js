@@ -78,7 +78,12 @@ function SignInSide({history}) {
 
   function handleSubmitClick(event){
     event.preventDefault();
-    console.log(username)
+    // const id = "123"
+    // const name = "John Wu"
+    
+    // history.push({pathname:'/dashboard', state: {id: id, name: name}})
+
+    
     axios.post('http://localhost:8080/login', {"username":username,"password": password}).then((user)=>{
       console.log(user)
       history.push({pathname:'/dashboard', state: {id: user.data.id, name: user.data.fullName}})
@@ -99,7 +104,7 @@ function SignInSide({history}) {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <form className={classes.form} noValidate onSubmit={handleSubmitClick}>
+          <form className={classes.form} noValidate onSubmit={handleSubmitClick} id = "form">
             <TextField
               variant="outlined"
               margin="normal"
@@ -111,6 +116,7 @@ function SignInSide({history}) {
               autoComplete="username"
               onChange={handleUsernameChange}
               autoFocus
+              id = "username-input"
             />
             <TextField
               variant="outlined"
@@ -123,6 +129,7 @@ function SignInSide({history}) {
               id="password"
               onChange={handlePasswordChange}
               autoComplete="current-password"
+              id = "password-input"
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -135,6 +142,7 @@ function SignInSide({history}) {
               variant="contained"
               color="primary"
               className={classes.submit}
+              id = "button-1"
             >
               Sign In
             </Button>
@@ -145,8 +153,8 @@ function SignInSide({history}) {
                 </Link>
               </Grid>
               <Grid item>
-                <Link to ="/signup">
-                    
+                <Link to ="/signup"   id = "link-1">
+                
                   {"Don't have an account? Sign Up"}
                 </Link>
                

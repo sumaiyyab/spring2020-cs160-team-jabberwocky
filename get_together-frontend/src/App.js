@@ -11,27 +11,26 @@ import {
   Link
 } from "react-router-dom";
 import Scheduler from './Scheduler';
+import login from './login';
 
 function App(){  
   
   return (
     <Router>
-     
       <Switch>
-          <Route path="/login">
+        <Route path="/login">
+          <Login />
+        </Route>
 
-            <Login />
-
-          </Route>
         <Route path= "/signUp">
-              <SignUp />
-            </Route>
-          <Route path="/dashboard">
-            <Scheduler/>
-          </Route>
-        </Switch>
+          <SignUp />
+        </Route>
+
+        <Route path="/dashboard">
+          <Scheduler/>
+        </Route>
+      </Switch>
     </Router>
   ) 
-
 }
 export default App;
