@@ -10,7 +10,7 @@ services:
       - 27017:27017
 
   getTogether-api:
-    build: ./getTogether
+    build: ./gettogether-api
     container_name: getTogether-api
     ports:
       - 8080:8080
