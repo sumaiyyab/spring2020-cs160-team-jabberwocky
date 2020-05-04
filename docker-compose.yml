@@ -1,0 +1,26 @@
+version: '1'
+services:
+
+  getTogether-mongo:
+    image: "mongo:4.2.6-bionic"
+    container_name: getTogether-mongo
+    volumes:
+      - mongo-data:/var/lib/mongo/data
+    ports:
+      - 27017:27017
+
+  getTogether-api:
+    build: ./getTogether
+    container_name: getTogether-api
+    ports:
+      - 8080:8080
+    links:
+      - getTogether-mongo
+
+  getTogether-frontend:
+    build: ./get_together-frontend
+    container_name: get_together-frontend
+    ports:
+      - 3000:3000
+    links:
+      - getTogether-api
