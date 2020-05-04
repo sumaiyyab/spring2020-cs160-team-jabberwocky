@@ -1,26 +1,33 @@
 version: '3.3'
+
 services:
 
-  getTogether-mongo:
+  gettogether-mongo:
     image: "mongo:4.2.6-bionic"
-    container_name: getTogether-mongo
+    container_name: gettogether-mongo
     volumes:
       - mongo-data:/var/lib/mongo/data
     ports:
       - 27017:27017
 
-  getTogether-api:
+  gettogether-api:
     build: ./getTogether
     container_name: gettogether-api
     ports:
       - 8080:8080
     links:
-      - getTogether-mongo
+      - gettogether-mongo
+    environment:
+      - MONGODB_URI=mongodb://gettogether-mongo
 
-  getTogether-frontend:
+  gettogether-frontend:
+    stdin_open: true
     build: ./get_together-frontend
     container_name: get_together-frontend
     ports:
       - 3000:3000
     links:
-      - getTogether-api
+      - gettogether-api
+
+volumes:
+    mongo-data:
