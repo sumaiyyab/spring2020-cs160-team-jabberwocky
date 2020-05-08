@@ -22,7 +22,7 @@ describe('Login', () => {
       })
 
       it('Allows you to login', () => {
-        const username="moe"
+        const username="joe"
         const pw = "123";
         cy.visit('/login')
         cy.get('#username-input').type(username)

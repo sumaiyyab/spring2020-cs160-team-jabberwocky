@@ -1,7 +1,7 @@
 describe('Dashboard', () => {
     beforeEach(() => {
       cy.visit('/login')
-        cy.get('#username-input').type('moe')
+        cy.get('#username-input').type('joe')
         cy.get('#password-input').type('123')
         cy.get('#button-1').click()
     })
