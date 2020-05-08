@@ -1,5 +1,34 @@
 # spring2020-cs160-team-jabberwocky
 
+# How to run front-end:
+
+First step is:
+
+```
+git clone https://github.com/sumaiyyab/spring2020-cs160-team-jabberwocky.git
+```
+
+Then cd into the root folder and find front-end folder:
+
+```
+cd spring2020-cs160-team-jabberwocky
+cd get_together-frontend
+```
+
+Before running the application, make sure to install packages:
+
+```
+npm install
+```
+
+then run the application: 
+
+```
+npm start
+```
+
+The application is hosted on localhost:3000 and the landing page is /login. 
+
  # Cypress
 
 ## What is this?
