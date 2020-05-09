@@ -1,6 +1,6 @@
 # spring2020-cs160-team-jabberwocky
 
-# How to run front-end:
+## How to run front-end:
 
 First step is:
 
@@ -29,9 +29,9 @@ npm start
 
 The application is hosted on localhost:3000 and the landing page is /login. 
 
- # Cypress
+ ## Cypress
 
-## What is this?
+### What is this?
 
 Cypress comes packaged as an `npm` module, which is all you need to get started.
 
@@ -41,7 +41,7 @@ After installing you'll be able to:
 - Run Cypress from the CLI
 - `require` Cypress as a module
 
-## How to run the automated test cases
+### How to run the automated test cases
 
 The test cases are written for front-end application. After installing the Cypress package:
 
@@ -62,8 +62,16 @@ npm run cypress
 
 The automated test cases should run. Here are some of the screenshots:
 
-## Screenshots
+### Screenshots
 ![Example screenshot](./screenshot1.jpg)
 ![Example screenshot](./screenshot2.jpg)
 ![Example screenshot](./screenshot3.jpg)
 ![Example screenshot](./screenshot4.jpg)
+
+## To locally develop backend
+
+1. git clone repo and cd into backend folder: /spring2020-cs160-team-jabberwocky/getTogether
+2. Install Project Lombok to your IDE of choice. We recommend Spring Tool Suite due to its integration of Spring Boot functionality
+3. Import Java files as Maven project using the pom.xml
+4. You can now develop and run the code locally on http://localhost:8080 using curl commands or the Swagger UI at http://localhost:8080/swagger-ui.html
+3. 
