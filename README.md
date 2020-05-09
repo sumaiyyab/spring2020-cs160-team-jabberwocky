@@ -74,4 +74,3 @@ The automated test cases should run. Here are some of the screenshots:
 2. Install Project Lombok to your IDE of choice. We recommend Spring Tool Suite due to its integration of Spring Boot functionality
 3. Import Java files as Maven project using the pom.xml
 4. You can now develop and run the code locally on http://localhost:8080 using curl commands or the Swagger UI at http://localhost:8080/swagger-ui.html
-3. 
